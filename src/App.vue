@@ -1,8 +1,17 @@
 <template>
-  <div>
-    <p class="text-4xl font-bold text-red-500">Salom</p>
+  <div class="container px-5 m-4">
+    <Header/>
+    <router-view/>
+    <Footer/>
   </div>
+
 </template>
 <script>
-export default {}
+import Header from "./components/Header/Header.vue";
+import Footer from "./components/Footer/Footer.vue";
+
+export default {
+  components: {Header, Footer}
+}
 </script>
+style

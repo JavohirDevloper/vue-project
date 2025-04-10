@@ -23,6 +23,15 @@ ul {
 }
 
 .container {
-    max-width: 1280px;
+    max-width: 1250px;
     margin: 0 auto;
+}
+input {
+    outline: none;
+    padding: 10px;
+}
+.btn {
+    width: 100%;
+    padding: 12px;
+    color: white;
 }
