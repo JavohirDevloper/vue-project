@@ -5,11 +5,13 @@
         Tizimga kirish
       </h2>
       <form>
+        <ValidationError v-if="validationErrors" :validationErrors="validationErrors"/>
         <div class="input_password">
           <InputUI
               :label="'Email'"
               :type="'email'"
               id="email"
+              v-model="email"
               :placeholder="'Enter your email'"
           ></InputUI>
         </div>
@@ -18,11 +20,13 @@
               :label="'Parol'"
               :type="'password'"
               id="password"
+              v-model="password"
               :placeholder="'Enter your password'"
           ></InputUI>
         </div>
         <div class="btns">
           <ButtonUI
+              @click="submitHandler"
           >
             Kirish
           </ButtonUI>
@@ -44,14 +48,45 @@ import {library} from '@fortawesome/fontawesome-svg-core'
 import {faLock, faEnvelope} from '@fortawesome/free-solid-svg-icons'
 import InputUI from "../../../components/UI/Input/Input.vue";
 import ButtonUI from "../../../components/UI/Button/Button.vue";
+import ValidationError from "../../../components/Errors/ValidationError.vue";
+import {mapState} from "vuex";
 
 library.add(faLock, faEnvelope)
 
 export default {
   components: {
+    ValidationError,
     ButtonUI,
     InputUI,
     FontAwesomeIcon
+  },
+  data() {
+    return {
+      email: '',
+      password: '',
+    }
+  },
+  computed: {
+    ...mapState({
+      isLoading: state => state.auth.isLoading,
+      validationErrors: state => state.auth.errors
+    })
+  },
+  methods: {
+    submitHandler(e) {
+      e.preventDefault()
+      const data = {
+        email: this.email,
+        password: this.password,
+      }
+      this.$store
+          .dispatch('login', data)
+          .then(user => {
+            console.log('USER', user)
+            this.$router.push({name: 'Home'})
+          })
+          .catch(err => console.log('ERROR', err))
+    },
   },
 }
 </script>

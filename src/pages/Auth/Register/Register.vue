@@ -4,11 +4,12 @@
       <h2 class="text-2xl font-bold text-center mb-6">
         Ro'yxatdan o'tish
       </h2>
-      <form @submit.prevent="handleLogin">
+      <form>
+        <ValidationError v-if="validationErrors" :validationErrors="validationErrors"/>
         <div class="input_password">
           <InputUI
               :label="'Name'"
-              v-model="email"
+              v-model="username"
               type="name"
               id="name"
               :placeholder="'Enter your full name'"
@@ -32,13 +33,12 @@
               :placeholder="'Enter your password'"
           />
         </div>
-        <ButtonUI
+        <Button
             :type="'submit'"
-            :disabled="isLoading"
             @click="submitHandler"
         >
           Ro'yxatdan o'tish
-        </ButtonUI>
+        </Button>
       </form>
       <p class="mt-4 text-center flex justify-between" style="margin-top: 10px">
         Avval ro'yxatdan o'tganmisiz?
@@ -51,38 +51,46 @@
 </template>
 
 <script>
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
+import ValidationError from "../../../components/Errors/ValidationError.vue";
 import InputUI from "../../../components/UI/Input/Input.vue";
-import ButtonUI from "../../../components/UI/Button/Button.vue";
-import AuthService from "../../../services/auth.ts"; // ✅ to'g'ri import
+import Button from "../../../components/UI/Button/Button.vue";
+import {mapState} from "vuex";
 
 export default {
-  components: {
-    ButtonUI,
-    InputUI,
-    FontAwesomeIcon
-  },
   data() {
     return {
+      username: '',
       email: '',
       password: '',
     }
   },
+  components: {
+    Button,
+    InputUI,
+    ValidationError,
+  },
   computed: {
-    isLoading() {
-      return this.$store.state.auth.isLoading
-    }
+    ...mapState({
+      isLoading: state => state.auth.isLoading,
+      validationErrors: state => state.auth.errors
+    })
   },
   methods: {
     submitHandler(e) {
-      e.preventDefault();
+      e.preventDefault()
       const data = {
-        username: "javohirdevoq",
-        email: "sdnsonsidn@gmail.com",
-        password: "123456789",
+        username: this.username,
+        email: this.email,
+        password: this.password,
       }
-      this.$store.dispatch("register", data);
-    }
+      this.$store
+          .dispatch('register', data)
+          .then(user => {
+            console.log('USER', user)
+            this.$router.push({name: 'Home'})
+          })
+          .catch(err => console.log('ERROR', err))
+    },
   },
 }
 </script>

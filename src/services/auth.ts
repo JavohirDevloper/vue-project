@@ -1,10 +1,12 @@
-import axios from "./axios.ts"
+import axios from './axios'
 
-
-const AuthService = {
-    register: (user: any) => {
+const AuthServises = {
+    register(user: any) {
         return axios.post('/users', {user})
+    },
+    login(user: any) {
+        return axios.post('/users/login', {user})
     }
 }
 
-export default AuthService;
+export default AuthServises

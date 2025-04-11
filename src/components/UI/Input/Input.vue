@@ -1,12 +1,15 @@
 <template>
   <div>
-    <label class="mb-2">{{ label }}</label>
+    <label class="mb-2" :for="label">{{ label }}</label>
     <input
         :type="type"
         class="w-full pl-10 p-3 border rounded-lg"
         v-bind="$attrs"
+        :id="label "
         :placeholder="placeholder"
         required
+        @input="updateInput"
+        :value="modelValue"
     >
 
   </div>
@@ -19,7 +22,13 @@ export default {
   props: {
     label: String,
     type: String,
-    placeholder: String
+    placeholder: String,
+    modelValue: [String, Number],
+  },
+  methods: {
+    updateInput(e) {
+      this.$emit('update:modelValue', e.target.value);
+    }
   },
   inheritAttrs: false
 };
